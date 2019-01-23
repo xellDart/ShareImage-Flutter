@@ -23,6 +23,7 @@ static NSString *const PLATFORM_CHANNEL = @"plugins.flutter.io/share";
 + (void)share:(id)sharedItems withController:(UIViewController *)controller {
   NSMutableString *filePath = [NSMutableString stringWithString:sharedItems];
     NSString *docsPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+
     NSString *imagePath = [docsPath stringByAppendingPathComponent:filePath];
     NSURL *imageUrl = [NSURL fileURLWithPath:imagePath];
     NSData *imageData = [NSData dataWithContentsOfURL:imageUrl];
