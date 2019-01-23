@@ -1,7 +1,3 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 #import "SharePlugin.h"
 
 static NSString *const PLATFORM_CHANNEL = @"plugins.flutter.io/share";
@@ -15,28 +11,8 @@ static NSString *const PLATFORM_CHANNEL = @"plugins.flutter.io/share";
 
   [shareChannel setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
     if ([@"share" isEqualToString:call.method]) {
-      NSDictionary *arguments = [call arguments];
-
-      if ([arguments[@"text"] length] == 0) {
-        result(
-            [FlutterError errorWithCode:@"error" message:@"Non-empty text expected" details:nil]);
-        return;
-      }
-
-      NSNumber *originX = arguments[@"originX"];
-      NSNumber *originY = arguments[@"originY"];
-      NSNumber *originWidth = arguments[@"originWidth"];
-      NSNumber *originHeight = arguments[@"originHeight"];
-
-      CGRect originRect;
-      if (originX != nil && originY != nil && originWidth != nil && originHeight != nil) {
-        originRect = CGRectMake([originX doubleValue], [originY doubleValue],
-                                [originWidth doubleValue], [originHeight doubleValue]);
-      }
-
       [self share:call.arguments
-          withController:[UIApplication sharedApplication].keyWindow.rootViewController
-                atSource:originRect];
+             withController:[UIApplication sharedApplication].keyWindow.rootViewController];
       result(nil);
     } else {
       result(FlutterMethodNotImplemented);
@@ -44,17 +20,17 @@ static NSString *const PLATFORM_CHANNEL = @"plugins.flutter.io/share";
   }];
 }
 
-+ (void)share:(id)sharedItems
-    withController:(UIViewController *)controller
-          atSource:(CGRect)origin {
-  UIActivityViewController *activityViewController =
-      [[UIActivityViewController alloc] initWithActivityItems:@[ sharedItems ]
-                                        applicationActivities:nil];
-  activityViewController.popoverPresentationController.sourceView = controller.view;
-  if (!CGRectIsEmpty(origin)) {
-    activityViewController.popoverPresentationController.sourceRect = origin;
-  }
-  [controller presentViewController:activityViewController animated:YES completion:nil];
++ (void)share:(id)sharedItems withController:(UIViewController *)controller {
+  NSMutableString *filePath = [NSMutableString stringWithString:sharedItems];
+    NSString *docsPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *imagePath = [docsPath stringByAppendingPathComponent:filePath];
+    NSURL *imageUrl = [NSURL fileURLWithPath:imagePath];
+    NSData *imageData = [NSData dataWithContentsOfURL:imageUrl];
+    UIImage *shareImage = [UIImage imageWithData:imageData];
+    UIActivityViewController *activityViewController =
+    [[UIActivityViewController alloc] initWithActivityItems:@[ shareImage ]
+                                      applicationActivities:nil];
+    [controller presentViewController:activityViewController animated:YES completion:nil];
 }
 
 @end
