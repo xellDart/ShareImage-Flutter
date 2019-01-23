@@ -13,7 +13,7 @@ To use this plugin
 ```
  share:
     git:
-     url: https://github.com/d-silveira/flutter-share.git
+     url: https://github.com/xperiafan13-rom/ShareImage-Flutter.git
 ```
  as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
