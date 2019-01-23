@@ -23,27 +23,9 @@ import 'package:share/share.dart';
 ```
  then, just instantiate a Share with the corresponding named constructor, with the relevant named arguments:
 ```
-Share.plainText(text: <String>, title: <String>);
-Share.file(path: <String>, mimeType: ShareType, title: , text: );
+
 Share.image(path: , mimeType: , title: , text: );
-Share.multiple(shares: List<Share>, mimeType: , title: );
 ```
-with only the first shown argument required,
-and then call `.share(Rect sharePositionOrigin)`
-
-3. to receive any kind of share, in your Android MainActivity replace `extends FlutterActivity` with `extends FlutterShareReceiverActivity` and in your main.dart:
-```
-import 'package:share/receive_share_state.dart';
-```
- and then in your StatefulWidget replace your `extends State<T>` with `extends ReceiveShareState<T>` and implement your mandatory `@override void receiveShare(Share) { }` where you'll receive your shares.
- 
- finally call ``enableShareReceiving();`` in your initState().
-
-That's it!
-
-## Example
-
-Check out the example in the example project folder for a working example.
 
 ## Notes
 
