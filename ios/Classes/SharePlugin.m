@@ -11,8 +11,10 @@ static NSString *const PLATFORM_CHANNEL = @"plugins.flutter.io/share";
 
   [shareChannel setMethodCallHandler:^(FlutterMethodCall *call, FlutterResult result) {
     if ([@"share" isEqualToString:call.method]) {
+      NSDictionary *arguments = [call arguments];
       [self share:call.arguments
              withController:[UIApplication sharedApplication].keyWindow.rootViewController];
+      
       result(nil);
     } else {
       result(FlutterMethodNotImplemented);
@@ -20,8 +22,8 @@ static NSString *const PLATFORM_CHANNEL = @"plugins.flutter.io/share";
   }];
 }
 
-+ (void)share:(id)sharedItems withController:(UIViewController *)controller {
-  NSMutableString *filePath = [NSMutableString stringWithString:sharedItems];
++ (void)share:(NSDictionary*)sharedItems withController:(UIViewController *)controller {
+    NSString *filePath = sharedItems[@"path"];
     NSString *docsPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 
     NSString *imagePath = [docsPath stringByAppendingPathComponent:filePath];

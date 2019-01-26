@@ -7,10 +7,11 @@ package io.flutter.plugins.share;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
-
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.Map;
-
+import java.io.File;
+import android.support.v4.content.FileProvider;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
@@ -112,17 +113,22 @@ public class SharePlugin implements MethodChannel.MethodCallHandler {
 
 		Intent shareIntent = new Intent();
 		shareIntent.setAction(Intent.ACTION_SEND);
+
 		if (!TextUtils.isEmpty(title)) {
 			shareIntent.putExtra(Intent.EXTRA_SUBJECT, title);
 		}
 		if (!ShareType.TYPE_PLAIN_TEXT.equals(shareType)) {
-			shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(path));
+			File imageFile = new File(mRegistrar.context().getCacheDir(), path);
+        	String fileProviderAuthority = mRegistrar.context().getPackageName() + ".fileprovider.share_image";
+        	Uri contentUri = FileProvider.getUriForFile(mRegistrar.context(), fileProviderAuthority, imageFile);
+			shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
 			if (!TextUtils.isEmpty(text)) {
 				shareIntent.putExtra(Intent.EXTRA_TEXT, text);
 			}
 		} else {
 			shareIntent.putExtra(Intent.EXTRA_TEXT, text);
 		}
+
 		shareIntent.setType(shareType.toString());
 		Intent chooserIntent = Intent.createChooser(shareIntent, null /* dialog title optional */);
 		if (mRegistrar.activity() != null) {
