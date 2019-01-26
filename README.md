@@ -1,6 +1,6 @@
-# Share Anything plugin
+# Share Image plugin
 
-A Flutter plugin to share content from your Flutter app via the platform's share dialog and receive shares from other apps on the platform (currently only on Android).  
+A Flutter plugin to share images from your Flutter app via the platform's share dialog.  
 
 Wraps the ACTION_SEND Intent, and ACTION_SEND + ACTION_SEND_MULTIPLE IntentReceiver on Android
  and UIActivityViewController on iOS.
@@ -23,10 +23,14 @@ import 'package:share/share.dart';
 ```
  then, just instantiate a Share with the corresponding named constructor, with the relevant named arguments:
 ```
-
-Share.image(path: , mimeType: , title: , text: );
+ByteData data = imageFromNetwork.buffer.asByteData();
+Share.image(
+          imageBytes: data,
+          mimeType: ShareType.TYPE_IMAGE,
+          title: 'Title Image',
+          text: 'Summary Image').share();
 ```
 
 ## Notes
 
-Currently only the Android part is complete (IOS part does the same as google's original version), but be on the lookout for new versions, as the IOS part is being worked on and will soon do all the same bells and whistles.
+Only image share is fully working for the moment
